@@ -5,6 +5,9 @@ require('dotenv').config();
 const app = express();
 app.use(express.json()); // Gelen JSON verilerini okuyabilmek için
 
+const authRoutes = require('./routes/auth');
+app.use('/api/auth', authRoutes);
+
 const PORT = process.env.PORT || 3001;
 const MONGO_URI = process.env.MONGO_URI;
 
