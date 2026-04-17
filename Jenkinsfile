@@ -22,21 +22,23 @@ pipeline {
             }
         }
 
-        stage('Canlıya Al (Deploy)') { // İŞTE EKSİK OLAN VE SENİN SORDUĞUN KISIM!
+        stage('Canlıya Al (Deploy)') {
             steps {
-                // Jenkins imajı oluşturduktan sonra sistemi otomatik günceller
-                sh 'docker-compose up -d'
-                echo 'Sistem otomatik olarak güncellendi ve yeni versiyon yayına alındı! 🚀'
+                // KRİTİK DÜZELTME: 
+                // 1. '-p' ile proje ismini senin bilgisayarındakiyle (microserviceproject) eşitliyoruz.
+                // 2. Sadece değişen servisleri (user, vehicle, rental, mongo) güncelliyoruz.
+                sh 'docker-compose -p microserviceproject up -d user-service vehicle-service rental-service mongo'
+                echo 'Mikroservisler otomatik olarak güncellendi! 🚀'
             }
         }
     }
     
     post {
         success {
-            echo 'Harika! Tüm süreç (Build + Deploy) başarıyla tamamlandı.'
+            echo 'Harika! Build ve Deploy başarıyla tamamlandı.'
         }
         failure {
-            echo 'Hata! Bir şeyler ters gitti.'
+            echo 'Hata! Deploy aşamasında bir çakışma yaşandı.'
         }
     }
 }
