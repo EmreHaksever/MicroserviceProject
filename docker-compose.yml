@@ -47,7 +47,9 @@ services:
       - vehicle-service 
 
   jenkins:
-    image: jenkins/jenkins:lts
+    build:
+      context: .
+      dockerfile: Dockerfile.jenkins
     container_name: jenkins_server
     user: root 
     ports:
@@ -56,7 +58,8 @@ services:
     volumes:
       - jenkins_data:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock 
-      - /usr/bin/docker:/usr/bin/docker
+    networks:
+      - rental_network
 
 volumes:
   mongo_data:
