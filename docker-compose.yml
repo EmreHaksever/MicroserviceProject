@@ -9,7 +9,7 @@ services:
 
   user-service:
     build: ./user-service
-    image: arac_kiralama_user_service # İsim sabitlendi
+    image: arac_kiralama_user_service
     container_name: user-service
     ports:
       - "3001:3001"
@@ -19,10 +19,12 @@ services:
       JWT_SECRET: super_gizli_anahtar_kelimem_123
     depends_on:
       - mongo
+    labels:
+      com.datadoghq.ad.logs: '[{"source": "nodejs", "service": "user-service"}]'
 
   vehicle-service:
     build: ./vehicle-service
-    image: arac_kiralama_vehicle_service # İsim sabitlendi
+    image: arac_kiralama_vehicle_service
     container_name: vehicle-service
     ports:
       - "3002:3002"
@@ -31,10 +33,12 @@ services:
       MONGO_URI: mongodb://mongo:27017/vehicle_db
     depends_on:
       - mongo
+    labels:
+      com.datadoghq.ad.logs: '[{"source": "nodejs", "service": "vehicle-service"}]'
 
   rental-service:
     build: ./rental-service
-    image: arac_kiralama_rental_service # İsim sabitlendi
+    image: arac_kiralama_rental_service
     container_name: rental-service
     ports:
       - "3003:3003"
@@ -46,6 +50,8 @@ services:
     depends_on:
       - mongo
       - vehicle-service 
+    labels:
+      com.datadoghq.ad.logs: '[{"source": "nodejs", "service": "rental-service"}]'
 
   jenkins:
     build:
@@ -59,6 +65,22 @@ services:
     volumes:
       - jenkins_data:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock 
+
+  # --- DATADOG AJANI BURADAN BAŞLIYOR ---
+  datadog-agent:
+    image: gcr.io/datadoghq/agent:latest
+    container_name: datadog_agent
+    environment:
+      - DD_API_KEY=b7639f20ef276502e65aa9420f6efadf # <-- Kendi anahtarını buraya koy
+      - DD_SITE=datadoghq.com
+      - DD_LOGS_ENABLED=true
+      - DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL=true
+      - DD_PROCESS_AGENT_ENABLED=true
+      - DD_APM_ENABLED=true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /proc/:/host/proc/:ro
+      - /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
 
 volumes:
   mongo_data:
