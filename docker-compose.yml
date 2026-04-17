@@ -72,7 +72,7 @@ services:
     container_name: datadog_agent
     environment:
       - DD_API_KEY=b7639f20ef276502e65aa9420f6efadf # <-- Kendi anahtarını buraya koy
-      - DD_SITE=datadoghq.com
+      - DD_SITE=us5.datadoghq.com  # <-- Burayı us5 yaptık
       - DD_LOGS_ENABLED=true
       - DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL=true
       - DD_PROCESS_AGENT_ENABLED=true
