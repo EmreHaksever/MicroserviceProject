@@ -13,7 +13,7 @@ const MONGO_URI = process.env.MONGO_URI;
 
 // MongoDB Bağlantısı
 mongoose.connect(MONGO_URI)
-  .then(() => console.log('✅ User Service: MongoDB bağlantısı başarılı.CI/CD TESTI OK!'))
+  .then(() => console.log('✅ User Service: MongoDB bağlantısı başarılı.TEST 2: Jenkins mantığı tamamen anlaşıldı!'))
   .catch((err) => console.error('❌ User Service: MongoDB bağlantı hatası:', err));
 
 // Sağlık Kontrolü (Healthcheck) Endpoint'i - Monitoring için lazım olacak!
