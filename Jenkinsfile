@@ -1,17 +1,15 @@
 pipeline {
-    agent any // Herhangi bir müsait Jenkins ajanı üzerinde çalıştır
+    agent any
 
     stages {
         stage('Checkout') {
             steps {
-                // Kodları GitHub'dan çeker
                 checkout scm
             }
         }
 
         stage('Docker Sürüm Kontrolü') {
             steps {
-                // Jenkins sunucusunun Docker'a erişimi var mı diye test ediyoruz
                 sh 'docker --version'
                 sh 'docker-compose --version'
             }
@@ -19,18 +17,26 @@ pipeline {
 
         stage('Mikroservisleri Derle (Build)') {
             steps {
-                // Tüm servislerin Docker imajlarını test amaçlı derler
+                // Sadece imajları oluşturur
                 sh 'docker-compose build'
+            }
+        }
+
+        stage('Canlıya Al (Deploy)') { // İŞTE EKSİK OLAN VE SENİN SORDUĞUN KISIM!
+            steps {
+                // Jenkins imajı oluşturduktan sonra sistemi otomatik günceller
+                sh 'docker-compose up -d'
+                echo 'Sistem otomatik olarak güncellendi ve yeni versiyon yayına alındı! 🚀'
             }
         }
     }
     
     post {
         success {
-            echo 'Harika! Tüm mikroservisler başarıyla derlendi.'
+            echo 'Harika! Tüm süreç (Build + Deploy) başarıyla tamamlandı.'
         }
         failure {
-            echo 'Hata! Kodlarda veya Dockerfile içinde bir sorun var.'
+            echo 'Hata! Bir şeyler ters gitti.'
         }
     }
 }
