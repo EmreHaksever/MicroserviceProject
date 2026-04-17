@@ -24,14 +24,11 @@ pipeline {
 
         stage('Canlıya Al (Deploy)') {
             steps {
-                // KRİTİK DÜZELTME: 
-                // 1. '-p' ile proje ismini senin bilgisayarındakiyle (microserviceproject) eşitliyoruz.
-                // 2. Sadece değişen servisleri (user, vehicle, rental, mongo) güncelliyoruz.
-                sh 'docker-compose -p microserviceproject up -d user-service vehicle-service rental-service mongo'
-                echo 'Mikroservisler otomatik olarak güncellendi! 🚀'
+                // Listeye datadog-agent'ı da ekledik
+                sh 'docker-compose -p microserviceproject up -d user-service vehicle-service rental-service mongo datadog-agent'
+                echo 'Sistem ve Datadog Ajanı güncellendi! 🚀'
             }
         }
-    }
     
     post {
         success {
