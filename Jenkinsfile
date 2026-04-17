@@ -17,25 +17,25 @@ pipeline {
 
         stage('Mikroservisleri Derle (Build)') {
             steps {
-                // Sadece imajları oluşturur
                 sh 'docker-compose build'
             }
         }
 
         stage('Canlıya Al (Deploy)') {
             steps {
-                // Listeye datadog-agent'ı da ekledik
+                // Datadog ajanını da listeye eklediğimizden emin oluyoruz
                 sh 'docker-compose -p microserviceproject up -d user-service vehicle-service rental-service mongo datadog-agent'
                 echo 'Sistem ve Datadog Ajanı güncellendi! 🚀'
             }
         }
-    
+    }
+
     post {
         success {
             echo 'Harika! Build ve Deploy başarıyla tamamlandı.'
         }
         failure {
-            echo 'Hata! Deploy aşamasında bir çakışma yaşandı.'
+            echo 'Hata! Jenkinsfile içinde veya süreçte bir sorun var.'
         }
     }
 }
