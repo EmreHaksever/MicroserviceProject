@@ -9,6 +9,7 @@ services:
 
   user-service:
     build: ./user-service
+    image: arac_kiralama_user_service # İsim sabitlendi
     container_name: user-service
     ports:
       - "3001:3001"
@@ -21,6 +22,7 @@ services:
 
   vehicle-service:
     build: ./vehicle-service
+    image: arac_kiralama_vehicle_service # İsim sabitlendi
     container_name: vehicle-service
     ports:
       - "3002:3002"
@@ -32,6 +34,7 @@ services:
 
   rental-service:
     build: ./rental-service
+    image: arac_kiralama_rental_service # İsim sabitlendi
     container_name: rental-service
     ports:
       - "3003:3003"
