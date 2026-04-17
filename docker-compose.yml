@@ -1,0 +1,47 @@
+version: "3.9"
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  user-service:
+    build: ./user-service
+    container_name: user-service
+    ports:
+      - "3001:3001"
+    environment:
+      PORT: 3001
+      MONGO_URI: mongodb://mongo:27017/user_db
+      JWT_SECRET: super_gizli_anahtar_kelimem_123
+    depends_on:
+      - mongo
+
+  vehicle-service:
+    build: ./vehicle-service
+    container_name: vehicle-service
+    ports:
+      - "3002:3002"
+    environment:
+      PORT: 3002
+      MONGO_URI: mongodb://mongo:27017/vehicle_db
+    depends_on:
+      - mongo
+
+  rental-service:
+    build: ./rental-service
+    container_name: rental-service
+    ports:
+      - "3003:3003"
+    environment:
+      PORT: 3003
+      MONGO_URI: mongodb://mongo:27017/rental_db
+    depends_on:
+      - mongo
+
+volumes:
+  mongo_data:
