@@ -40,12 +40,24 @@ services:
     environment:
       PORT: 3003
       MONGO_URI: mongodb://mongo:27017/rental_db
-      JWT_SECRET: super_gizli_anahtar_kelimem_123 # Token doğrulaması için bu serviste de olmalı
-      # KRİTİK EKSİK BURASIYDI:
+      JWT_SECRET: super_gizli_anahtar_kelimem_123 
       VEHICLE_SERVICE_URL: http://vehicle-service:3002/api/vehicles
     depends_on:
       - mongo
-      - vehicle-service # Araç servisi kalkmadan kiralama kalkmamalı
+      - vehicle-service 
+
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins_server
+    user: root 
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_data:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock 
+      - /usr/bin/docker:/usr/bin/docker
 
 volumes:
   mongo_data:
+  jenkins_data:
