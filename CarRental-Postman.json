@@ -1,0 +1,167 @@
+{
+  "info": {
+    "name": "Araç Kiralama Mikroservis Testleri",
+    "description": "Bu koleksiyon, projedeki tüm mikroservislerin baştan sona (Kayıt, Giriş, Araç Ekleme, Araç Kiralama) test edilmesini sağlar.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. User Service - Kullanıcı Kaydı (Register)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"admin@test.com\",\n  \"password\": \"123456\",\n  \"role\": \"admin\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3001/api/auth/register",
+          "protocol": "http",
+          "host": [ "localhost" ],
+          "port": "3001",
+          "path": [ "api", "auth", "register" ]
+        }
+      }
+    },
+    {
+      "name": "2. User Service - Giriş (Login)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "if (jsonData.token) {",
+              "    pm.collectionVariables.set(\"jwt_token\", jsonData.token);",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"admin@test.com\",\n  \"password\": \"123456\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3001/api/auth/login",
+          "protocol": "http",
+          "host": [ "localhost" ],
+          "port": "3001",
+          "path": [ "api", "auth", "login" ]
+        }
+      }
+    },
+    {
+      "name": "3. Vehicle Service - Yeni Araç Ekle",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "if (jsonData.vehicle && jsonData.vehicle._id) {",
+              "    pm.collectionVariables.set(\"vehicle_id\", jsonData.vehicle._id);",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{jwt_token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"plateNumber\": \"34ABC123\",\n  \"brand\": \"Renault\",\n  \"model\": \"Megane\",\n  \"year\": 2024,\n  \"dailyPrice\": 750\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3002/api/vehicles",
+          "protocol": "http",
+          "host": [ "localhost" ],
+          "port": "3002",
+          "path": [ "api", "vehicles" ]
+        }
+      }
+    },
+    {
+      "name": "4. Vehicle Service - Müsait Araçları Listele",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3002/api/vehicles/available",
+          "protocol": "http",
+          "host": [ "localhost" ],
+          "port": "3002",
+          "path": [ "api", "vehicles", "available" ]
+        }
+      }
+    },
+    {
+      "name": "5. Rental Service - Araç Kirala",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{jwt_token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"vehicleId\": \"{{vehicle_id}}\",\n  \"startDate\": \"2026-06-01\",\n  \"endDate\": \"2026-06-05\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3003/api/rentals",
+          "protocol": "http",
+          "host": [ "localhost" ],
+          "port": "3003",
+          "path": [ "api", "rentals" ]
+        }
+      }
+    },
+    {
+      "name": "6. Rental Service - Benim Kiralamalarım",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+        ],
+        "url": {
+          "raw": "http://localhost:3003/api/rentals/my-rentals",
+          "protocol": "http",
+          "host": [ "localhost" ],
+          "port": "3003",
+          "path": [ "api", "rentals", "my-rentals" ]
+        }
+      }
+    },
+    {
+      "name": "7. Vehicle Service - Kiralama Sonrası Araçları Listele",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3002/api/vehicles/available",
+          "protocol": "http",
+          "host": [ "localhost" ],
+          "port": "3002",
+          "path": [ "api", "vehicles", "available" ]
+        }
+      }
+    }
+  ],
+  "variable": [
+    { "key": "jwt_token", "value": "" },
+    { "key": "vehicle_id", "value": "" }
+  ]
+}

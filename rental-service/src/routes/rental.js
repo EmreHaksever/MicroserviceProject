@@ -41,7 +41,10 @@ router.post('/', authMiddleware, async (req, res) => {
     await newRental.save();
 
     // 6. Vehicle Service'e bildir: Aracı "kirada" (isAvailable: false) olarak güncelle
-    await axios.put(`${VEHICLE_SERVICE_URL}/${vehicleId}/status`, { isAvailable: false });
+    await axios.put(`${VEHICLE_SERVICE_URL}/${vehicleId}/status`, 
+      { isAvailable: false },
+      { headers: { 'x-internal-api-key': process.env.INTERNAL_API_KEY } }
+    );
 
     res.status(201).json({ 
         message: 'Araç başarıyla kiralandı.', 

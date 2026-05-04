@@ -1,10 +1,15 @@
 const express = require('express');
 const Vehicle = require('../models/Vehicle');
+const authMiddleware = require('../middleware/authMiddleware');
 const router = express.Router();
 
-// YENİ ARAÇ EKLE (Postman'den test için)
-router.post('/', async (req, res) => {
+// YENİ ARAÇ EKLE (Sadece Admin yetkisi)
+router.post('/', authMiddleware, async (req, res) => {
   try {
+    // Admin yetki kontrolü
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Bu işlem için yetkiniz yok. Sadece adminler araç ekleyebilir.' });
+    }
     const newVehicle = new Vehicle(req.body);
     await newVehicle.save();
     res.status(201).json({ message: 'Araç sisteme eklendi.', vehicle: newVehicle });
@@ -26,6 +31,12 @@ router.get('/available', async (req, res) => {
 // ARAÇ DURUMUNU GÜNCELLE (Rental Service buraya istek atacak!)
 router.put('/:id/status', async (req, res) => {
   try {
+    // INTERNAL API KEY KONTROLÜ
+    const internalApiKey = req.headers['x-internal-api-key'];
+    if (internalApiKey !== process.env.INTERNAL_API_KEY) {
+      return res.status(403).json({ message: 'Yetkisiz erişim: Geçersiz veya eksik API Key.' });
+    }
+
     const { isAvailable } = req.body;
     const vehicle = await Vehicle.findByIdAndUpdate(
       req.params.id, 

@@ -31,6 +31,8 @@ services:
     environment:
       PORT: 3002
       MONGO_URI: mongodb://mongo:27017/vehicle_db
+      INTERNAL_API_KEY: my_super_secret_internal_key_123
+      JWT_SECRET: super_gizli_anahtar_kelimem_123
     depends_on:
       - mongo
     labels:
@@ -47,6 +49,7 @@ services:
       MONGO_URI: mongodb://mongo:27017/rental_db
       JWT_SECRET: super_gizli_anahtar_kelimem_123 
       VEHICLE_SERVICE_URL: http://vehicle-service:3002/api/vehicles
+      INTERNAL_API_KEY: my_super_secret_internal_key_123
     depends_on:
       - mongo
       - vehicle-service 
