@@ -17,6 +17,7 @@ services:
       PORT: 3001
       MONGO_URI: mongodb://mongo:27017/user_db
       JWT_SECRET: super_gizli_anahtar_kelimem_123
+      DD_AGENT_HOST: datadog-agent
     depends_on:
       - mongo
     labels:
@@ -33,6 +34,7 @@ services:
       MONGO_URI: mongodb://mongo:27017/vehicle_db
       INTERNAL_API_KEY: my_super_secret_internal_key_123
       JWT_SECRET: super_gizli_anahtar_kelimem_123
+      DD_AGENT_HOST: datadog-agent
     depends_on:
       - mongo
     labels:
@@ -50,6 +52,7 @@ services:
       JWT_SECRET: super_gizli_anahtar_kelimem_123 
       VEHICLE_SERVICE_URL: http://vehicle-service:3002/api/vehicles
       INTERNAL_API_KEY: my_super_secret_internal_key_123
+      DD_AGENT_HOST: datadog-agent
     depends_on:
       - mongo
       - vehicle-service 
