@@ -74,19 +74,21 @@ services:
 
   # --- DATADOG AJANI BURADAN BAŞLIYOR ---
   datadog-agent:
-    image: gcr.io/datadoghq/agent:latest
+    image: registry.datadoghq.com/agent:7
     container_name: datadog_agent
     environment:
-      - DD_API_KEY=b7639f20ef276502e65aa9420f6efadf # <-- Kendi anahtarını buraya koy
-      - DD_SITE=us5.datadoghq.com  # <-- Burayı us5 yaptık
+      - DD_API_KEY=65e454534297f70428c43200303b3b70
+      - DD_SITE=us5.datadoghq.com
       - DD_LOGS_ENABLED=true
       - DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL=true
       - DD_PROCESS_AGENT_ENABLED=true
       - DD_APM_ENABLED=true
+      - DD_DOGSTATSD_NON_LOCAL_TRAFFIC=true
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /proc/:/host/proc/:ro
       - /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
 
 volumes:
   mongo_data:
