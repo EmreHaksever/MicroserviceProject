@@ -6,6 +6,16 @@ require('dotenv').config();
 const app = express();
 app.use(express.json());
 
+// Gelen HTTP isteklerini konsola basan detaylı loglayıcı
+app.use((req, res, next) => {
+  const start = Date.now();
+  res.on('finish', () => {
+    const duration = Date.now() - start;
+    console.log(`[İSTEK] ${req.method} ${req.originalUrl} - Status: ${res.statusCode} - Süre: ${duration}ms`);
+  });
+  next();
+});
+
 const vehicleRoutes = require('./routes/vehicle');
 app.use('/api/vehicles', vehicleRoutes);
 

@@ -6,6 +6,16 @@ require('dotenv').config();
 const app = express();
 app.use(express.json());
 
+// Gelen HTTP isteklerini konsola basan (ve böylece Datadog'un yakalayacağı) detaylı loglayıcı
+app.use((req, res, next) => {
+  const start = Date.now();
+  res.on('finish', () => {
+    const duration = Date.now() - start;
+    console.log(`[İSTEK] ${req.method} ${req.originalUrl} - Status: ${res.statusCode} - Süre: ${duration}ms`);
+  });
+  next();
+});
+
 const authRoutes = require('./routes/auth');
 app.use('/api/auth', authRoutes);
 
