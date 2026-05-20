@@ -17,7 +17,6 @@ mongoose.connect(MONGO_URI)
   .then(() => console.log('✅ User Service: MongoDB bağlantısı başarılı.TEST 3: Jenkins mantığı tamamen anlaşıldı!'))
   .catch((err) => console.error('❌ User Service: MongoDB bağlantı hatası:', err));
 
-// Sağlık Kontrolü (Healthcheck) Endpoint'i - Monitoring için lazım olacak!
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'UP', service: 'user-service' });
 });
