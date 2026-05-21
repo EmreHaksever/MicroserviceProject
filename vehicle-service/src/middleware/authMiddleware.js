@@ -8,7 +8,7 @@ module.exports = (req, res, next) => {
   }
 
   try {
-    // "Bearer <token>" formatından sadece token kısmını alıyoruz
+    // "Bearer <token>" formatından sadece token kısmını alıyoruz.
     const verified = jwt.verify(token.split(" ")[1], process.env.JWT_SECRET);
     req.user = verified;
     next();
